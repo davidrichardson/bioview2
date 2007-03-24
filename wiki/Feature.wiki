@@ -10,11 +10,11 @@ What is a feature, why would you use it, what can it b applied to?
 
 Bioview currently has 5 different types of feature:
 
-# Domain
-# Variant call
-# Amplimer sequence
-# Inclusive boundry
-# Exclusive boundry
+  # Domain
+  # Variant call
+  # Amplimer sequence
+  # Inclusive boundry
+  # Exclusive boundry
 
 The function of these is as follows
 
