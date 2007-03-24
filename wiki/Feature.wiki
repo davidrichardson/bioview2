@@ -3,7 +3,7 @@
 
 = Introduction =
 
-What is a feature, why would you use it, what can it b applied to?
+What is a feature, why would you use it, what can it be applied to?
 
 
 = Details =
