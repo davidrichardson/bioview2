@@ -56,7 +56,7 @@ public class ChromatogramDemo {
       chrom = ChromatogramFactory.create(chromLoc);
     }
     catch(UnsupportedChromatogramFormatException e) {
-      throw new IOException("UnsupportedChromatogramFormatException detected for: "+ chromLoc.getPath(), e);
+      throw new IOException("UnsupportedChromatogramFormatException detected for: "+ chromLoc.getPath());
     }
     return chrom;
   }
