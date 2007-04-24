@@ -50,7 +50,7 @@ import uk.ac.sanger.cgp.bioview.util.ImageUtils;
  * @version $Revision: 1.29 $
  */
 public class ChromatogramRenderer {
-	
+	private static final IntensityChooser DEFAULT_INTENSITY_CHOOSER = new MaxIntensityChooser();  
   protected Log log = LogFactory.getLog(this.getClass());
   private static String dirSep = System.getProperty("file.separator");
   
@@ -63,6 +63,8 @@ public class ChromatogramRenderer {
   private static final boolean RENDER_SCALE = true;
   
   private static ImageUtils imageUtil = new ImageUtils();
+  
+  private IntensityChooser intensityChooser = null;
   
   public int[] getVariantViewStartAndStop(FeatureBean feat) {
     int varLength = (feat.getFeatureStop() - feat.getFeatureStart()) + 1;
@@ -204,7 +206,7 @@ public class ChromatogramRenderer {
         chrom = chrom.reverseComplement();
       }
       
-      chromGraph = new SimpleChromGraphic(chrom, startAtScan, stopAtScan, CHROMAT_HEIGHT, HORIZONTAL_SCALE, localTopHeightBuffer, RENDER_SCALE);
+      chromGraph = new SimpleChromGraphic(chrom, startAtScan, stopAtScan, CHROMAT_HEIGHT, HORIZONTAL_SCALE, localTopHeightBuffer, RENDER_SCALE, intensityChooser);
     }
     catch(ChromatogramRenderException e) {
       throw new ChromatogramRenderException(ChromError.OUTSIDE_OF_COVERAGE.toString(), e);
@@ -819,7 +821,12 @@ public class ChromatogramRenderer {
 	/**
    * Creates a new instance of ChromatogramRenderer
    */
-	public ChromatogramRenderer() {
-	}
+	public ChromatogramRenderer () {
+    this(DEFAULT_INTENSITY_CHOOSER);
+  }
+  
+  public ChromatogramRenderer(IntensityChooser intensityChooser) {
+    this.intensityChooser = intensityChooser;
+  }
 	
 }

@@ -40,7 +40,8 @@ import uk.ac.sanger.cgp.bioview.exceptions.ChromatogramRenderException;
  */
 public class SimpleChromGraphic {
 	protected Log log = LogFactory.getLog(this.getClass());
-	
+	private static final IntensityChooser DEFAULT_INTENSITY_CHOOSER = new MaxIntensityChooser();
+  
 	private int startScan = -1;
 	private int stopScan = -1;
 	int[][] samples = new int[5][];
@@ -56,6 +57,8 @@ public class SimpleChromGraphic {
   private boolean renderScale = false;
   private int xOffset = 0;
   private int scaledXoffset = 0;
+  
+  
   
   public static final Color A_BASE_COLOR = Color.GREEN;
   public static final Color C_BASE_COLOR = Color.BLUE;
@@ -88,11 +91,23 @@ public class SimpleChromGraphic {
     setUp(chrom, startScanIn, stopScanIn, heightIn, horizScaleIn, topHeightBuff, renderScale);
 	}
   
+    public SimpleChromGraphic(Chromatogram chrom, int startScanIn, int stopScanIn, int heightIn, float horizScaleIn, IntensityChooser intensityChooser) throws ChromatogramRenderException {
+    setUp(chrom, startScanIn, stopScanIn, heightIn, horizScaleIn, topHeightBuff, renderScale, intensityChooser);
+	}
+  
   public SimpleChromGraphic(Chromatogram chrom, int startScanIn, int stopScanIn, int heightIn, float horizScaleIn, int topHeightBuffIn, boolean renderScaleIn) throws ChromatogramRenderException {
     setUp(chrom, startScanIn, stopScanIn, heightIn, horizScaleIn, topHeightBuffIn, renderScaleIn);
   }
   
+  public SimpleChromGraphic(Chromatogram chrom, int startScanIn, int stopScanIn, int heightIn, float horizScaleIn, int topHeightBuffIn, boolean renderScaleIn, IntensityChooser intensityChooser) throws ChromatogramRenderException {
+    setUp(chrom, startScanIn, stopScanIn, heightIn, horizScaleIn, topHeightBuffIn, renderScaleIn, intensityChooser);
+  }
+  
   private void setUp(Chromatogram chrom, int startScanIn, int stopScanIn, int heightIn, float horizScaleIn, int topHeightBuffIn, boolean renderScaleIn) throws ChromatogramRenderException {
+    setUp(chrom, startScanIn, stopScanIn, heightIn, horizScaleIn, topHeightBuffIn, renderScaleIn, DEFAULT_INTENSITY_CHOOSER);
+  }
+  
+  private void setUp(Chromatogram chrom, int startScanIn, int stopScanIn, int heightIn, float horizScaleIn, int topHeightBuffIn, boolean renderScaleIn, IntensityChooser intensityChooser) throws ChromatogramRenderException {
     if(startScanIn < 0 && stopScanIn < 0) {
       throw new ChromatogramRenderException("Only the start scan indicies can be negative for padding purposes");
     }
@@ -116,12 +131,12 @@ public class SimpleChromGraphic {
 			samples[C] = setupSamples(chrom.getTrace(DNATools.c()));
 			samples[G] = setupSamples(chrom.getTrace(DNATools.g()));
 			samples[T] = setupSamples(chrom.getTrace(DNATools.t()));
+      maxIntensity = intensityChooser.selectIntensity(chrom, startScan, stopScan);
 		}
 		catch (IllegalSymbolException ise) {
 			throw new BioError("Can't happen");
 		}
-		
-    calcMaxIntensity();
+
 		invertSampleIntensities();
 		calcVertScalingFactor();
     calcXcoords();
@@ -187,23 +202,6 @@ public class SimpleChromGraphic {
 			arrPos++;
 		}
 		return newSample;
-	}
-	
-	private void calcMaxIntensity() {
-		maxIntensity=  Math.max(Math.max(maxIntensityBySample(samples[A]), maxIntensityBySample(samples[C]))
-														,
-														Math.max(maxIntensityBySample(samples[G]), maxIntensityBySample(samples[T]))
-													);
-	}
-	
-	private int maxIntensityBySample(int [] sample) {
-		int max = -1;
-		for(int i=0; i<sample.length; i++) {
-			if(sample[i] > max) {
-				max = sample[i];
-			}
-		}
-		return max;
 	}
   
   private void calcXcoords() {
