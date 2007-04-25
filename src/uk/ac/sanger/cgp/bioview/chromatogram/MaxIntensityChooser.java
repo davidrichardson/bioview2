@@ -7,44 +7,22 @@
 
 package uk.ac.sanger.cgp.bioview.chromatogram;
 
+import org.apache.commons.math.stat.StatUtils;
 import org.biojava.bio.chromatogram.Chromatogram;
 import org.biojava.bio.seq.DNATools;
 import org.biojava.bio.symbol.IllegalSymbolException;
 
 /**
+ * Select the maximum intensity from the sampled region
  *
  * @author dr4
  * @author $Author$
  * @version $Revision$
  */
-public class MaxIntensityChooser implements IntensityChooser {
-  
-  /**
-   * Creates a new instance of MaxIntensityChooser
-   */
-  public  MaxIntensityChooser(){
-  }
+public class MaxIntensityChooser extends AbstractIntensityChooser { 
 
-  
-  public int selectIntensity(Chromatogram c, int startScan, int stopScan) throws IllegalSymbolException {
-    int[] aScans = c.getTrace(DNATools.a());
-    int[] tScans = c.getTrace(DNATools.t());
-    int[] gScans = c.getTrace(DNATools.g());
-    int[] cScans = c.getTrace(DNATools.c());
-    
-    int minScan = Math.max(0, startScan);
-    int maxScan = Math.min(c.getTraceLength() - 1, stopScan);
-    
-    int maxIntensity = 0;   
-    
-    for (int i = minScan; i <= stopScan; i++) {
-      maxIntensity = Math.max(maxIntensity, aScans[i]);
-      maxIntensity = Math.max(maxIntensity, tScans[i]);
-      maxIntensity = Math.max(maxIntensity, gScans[i]);
-      maxIntensity = Math.max(maxIntensity, cScans[i]);
-    }   
-    
-    return maxIntensity;
+  int chooseIntensityFromMaxPerScan(double[] maxIntensityPerScan) {
+    return (int)Math.round( StatUtils.max(maxIntensityPerScan) );
   }
   
   
