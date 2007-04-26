@@ -1,0 +1,34 @@
+Exon/Feature/Genomic drawing components
+---------------------------------------
+
+FeatureType's will be need to be expanded to incorporate intron, domain will be
+classed as exon.
+
+The existing FeatureBean is adequate for holding the coordinate information,
+although a higher level Transcript object to link multiple exons and introns
+together will be needed.  Ideally a helper method will be used to generate a
+Transcript object from a list of coordinates e.g. provide exon boundry
+coordinates along with length of sequence, objects for each intron and exon
+generated and stored in Tracnscript object automatically.  Ability to pass
+multiple transcripts into the gene object (don't really want to build a full
+gene modeling data structure, but if you want to keep rendering of multiple
+transcripts simple this is probably the best way).
+
+The scale will be generated based on the transcript/gene length.
+
+For rendering of amplimers against the gene/transcript/exon... a list of domains
+will be provided to the renderer.  This will use the existing 'bumping'
+algortihm to prevent overlap of domains and calculation of image dimensions.
+There should be the ability to display any labels for the respective domains.
+
+A major function that should be provided is the ability to change the
+orientation of the rendered image.  This is simple until text labels are
+involved (however this may be handled fine by the transform function).
+
+Advanced functions (harder things)
+----------------------------------
+Would love to provide image map overlay as this could allow additional
+functionallity (when used in an application context), for example:
+1. Ability to zoom into regions
+2. Ability to select elements
+
