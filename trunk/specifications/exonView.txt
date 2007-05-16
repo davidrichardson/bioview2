@@ -1,3 +1,91 @@
+<EMAIL>
+Hi Andy,
+
+You are now a member of Bioview.  I'll update the spec along with the technical component of our emails.  Anyway back to what we were discussing...
+
+Thanks for clarifying that, I had a feeling that it would be something even higher level that I needed to think about.
+
+Probably something to get together and discuss and hack about a bit but how does this sound,
+
+Expand the feature types to include non-coding exon as well as intron.
+
+geneBean
+-chromStart
+-chromStop
+-chromName
+-geneName
+-chromSeq (sequence from start to stop only and optional) -transcriptArr
+	transcriptBean
+	-geneName
+	-transcriptName
+	-transcriptStart
+	-transcriptStop
+	-featureArr
+          featureBean (already exists)
+          -featureStart
+          -featureStop
+          -featureType (see FeatureType enum)
+          -featureColor
+          -featureName
+
+So the above structure allows a portion of the chromosome to be rendered (with sequence available) between 2 points, the coordinates of the features are in relation to the chromosome coordinates, of course all transcript and feature coords will need to be between the chromosome coords.
+
+How does this sound?  Perhaps once we get moved you could come over and we can throw a first draft together.  I'm going to get started on the drawing components as they will all be driven from the feature and featureType levels and also test the orientation flipping option (render on X vs. render on Y).
+
+Thanks
+
+Keiran
+</EMAIL>
+
+<EMAIL>
+andy.menzies wrote:
+I can help out on BioView, I've been thinking that we could use some better image code for representing transcripts.
+
+Generally transcripts only contain exons, introns are the gaps between the exons on the genome. But it depends what type of sequence you are trying to render.  If you are drawing a cDNA or CDS the introns are already removed and all the exon line up one after another. If you are drawing a chunk of chromosome, then a transcript will be an intermittent feature.  The exons will have introns between them.
+
+You may also have to think about coding and non-coding exons, A CDS will only contain coding exons, but a cDNA will also contain UTR exons. 
+These are still exons, they still exists on the genome, they just don't represent the protein.  And worse still, some exons are half coding and half non-coding.  If you take a look at ensembl contig view, they render coding portions of the exons as solid boxes and non-coding portions as outline boxes.  It might be worth thinking about making some sort of difference between the two types.
+
+Andy
+</EMAIL>
+
+<EMAIL>
+Keiran wrote:
+ Hi Andy,
+  
+I've got a bit if a question for you.  I'm planning the next phase of 
+the BioView tools and wondered if you'd be able to give me a bit of 
+input (be quiet nice if you wanted to become a project member).
+ 
+I've got the system for storing and representing 'features' on a 
+sequence and scale nicely laid out from the chromatogram work, they 
+just need expanding slightly.  My main issue that I need advice on is 
+the higher level structures for representing genes and transcripts.
+ 
+My plan was to have something like
+ 
+geneBean
+-geneName
+-transcriptArr
+    transcriptBean
+    -geneName
+    -transcriptName
+    -transcriptSequence
+    -featureArr
+        featureBean (already exists)
+        -featureStart
+        -featureStop
+        -featureType (see FeatureType enum)
+        -featureColor
+        -featureName
+ 
+My question is (something I should know), does the sequence for a 
+transcript include both intronic and exonic sequence?
+
+Keiran
+</EMAIL>
+
+
 Exon/Feature/Genomic drawing components
 ---------------------------------------
 
